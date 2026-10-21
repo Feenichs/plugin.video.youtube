@@ -2294,3 +2294,132 @@ msgstr "Nach Kanalnamen filtern, getrennt durc Komme, z. B. ‚Bester Kanal,Zwei
 #~ msgctxt "#30100"
 #~ msgid "Favorites"
 #~ msgstr "Favoriten"
+
+# TV interface
+msgctxt "#30830"
+msgid "TV interface"
+msgstr "TV-Oberfläche"
+
+msgctxt "#30831"
+msgid "Modern full-screen interface with rows and tiles, made for remote controls"
+msgstr "Moderne Vollbild-Oberfläche mit Reihen und Kacheln, gemacht für die Fernbedienung"
+
+msgctxt "#30832"
+msgid "Home"
+msgstr "Start"
+
+msgctxt "#30833"
+msgid "Subscriptions"
+msgstr "Abos"
+
+msgctxt "#30834"
+msgid "Explore"
+msgstr "Erkunden"
+
+msgctxt "#30835"
+msgid "Library"
+msgstr "Bibliothek"
+
+msgctxt "#30836"
+msgid "Account"
+msgstr "Konto"
+
+msgctxt "#30837"
+msgid "Continue watching"
+msgstr "Weiterschauen"
+
+msgctxt "#30838"
+msgid "Show all"
+msgstr "Alle anzeigen"
+
+msgctxt "#30839"
+msgid "Loading…"
+msgstr "Wird geladen …"
+
+msgctxt "#30840"
+msgid "Nothing here yet"
+msgstr "Hier gibt es noch nichts"
+
+msgctxt "#30841"
+msgid "Classic menu"
+msgstr "Klassisches Menü"
+
+msgctxt "#30842"
+msgid "Resume from %s"
+msgstr "Fortsetzen ab %s"
+
+msgctxt "#30843"
+msgid "Play from beginning"
+msgstr "Von Anfang an abspielen"
+
+msgctxt "#30844"
+msgid "Open"
+msgstr "Öffnen"
+
+msgctxt "#30845"
+msgid "Open TV interface when starting the add-on"
+msgstr "TV-Oberfläche beim Start des Addons öffnen"
+
+msgctxt "#30846"
+msgid "Show background preview of the selected item"
+msgstr "Hintergrundvorschau des ausgewählten Eintrags anzeigen"
+
+msgctxt "#30847"
+msgid "Show \"Continue watching\" row"
+msgstr "Reihe „Weiterschauen“ anzeigen"
+
+msgctxt "#30848"
+msgid "Show \"TV interface\" in the classic menu"
+msgstr "„TV-Oberfläche“ im klassischen Menü anzeigen"
+
+msgctxt "#30849"
+msgid "Recent searches"
+msgstr "Letzte Suchen"
+
+msgctxt "#30850"
+msgid "Recommendations, new videos from your subscriptions and what's trending"
+msgstr "Empfehlungen, neue Videos deiner Abos und aktuelle Trends"
+
+msgctxt "#30851"
+msgid "New videos and your subscribed channels"
+msgstr "Neue Videos und deine abonnierten Kanäle"
+
+msgctxt "#30852"
+msgid "Trending, live streams and channels to discover"
+msgstr "Trends, Livestreams und Kanäle zum Entdecken"
+
+msgctxt "#30853"
+msgid "History, watch later, likes, playlists and bookmarks"
+msgstr "Verlauf, Später ansehen, Likes, Playlists und Lesezeichen"
+
+msgctxt "#30854"
+msgid "Search for videos, channels and playlists"
+msgstr "Nach Videos, Kanälen und Playlists suchen"
+
+msgctxt "#30855"
+msgid "Sign in, switch user, settings and the classic menu"
+msgstr "Anmelden, Benutzer wechseln, Einstellungen und klassisches Menü"
+
+msgctxt "#30856"
+msgid "Account & settings"
+msgstr "Konto & Einstellungen"
+
+msgctxt "#30857"
+msgid "Shortcuts"
+msgstr "Schnellzugriff"
+
+msgctxt "#30858"
+msgid "Page %s"
+msgstr "Seite %s"
+
+msgctxt "#30859"
+msgid "Watched in Kodi"
+msgstr "In Kodi angesehen"
+
+msgctxt "#30860"
+msgid "Previous page"
+msgstr "Vorherige Seite"
+
+msgctxt "#30861"
+msgid "Next page: %s"
+msgstr "Nächste Seite: %s"

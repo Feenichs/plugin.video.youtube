@@ -21,6 +21,7 @@ from .constants import (
     CONTAINER_POSITION,
     CURRENT_ITEM,
     FOLDER_URI,
+    HOME_WINDOW_ACTIVE,
     MARK_AS_LABEL,
     PLAYLIST_ID,
     PLAYLIST_ITEM_ID,
@@ -70,6 +71,8 @@ def run():
     localize = context.localize
 
     clear_property(ABORT_FLAG)
+    # reset in case the home window was not closed cleanly, e.g. on a crash
+    clear_property(HOME_WINDOW_ACTIVE)
     if ui.get_property(SERVICE_RUNNING_FLAG) == BUSY_FLAG:
         monitor.refresh_container()
     set_property(SERVICE_RUNNING_FLAG)

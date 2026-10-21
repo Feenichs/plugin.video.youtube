@@ -535,5 +535,11 @@ def run(argv):
         if category == 'users':
             _user_actions(context, action, params)
             return
+
+        if category == 'home':
+            from ..youtube.home import open_home_window
+
+            open_home_window(context)
+            return
     finally:
         ui.set_property(WAIT_END_FLAG)

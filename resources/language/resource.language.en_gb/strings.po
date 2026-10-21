@@ -1604,3 +1604,132 @@ msgstr ""
 msgctxt "#30824"
 msgid "Filter by channel names separated by a comma eg. 'The Best Channel,The 2nd Best Channel'"
 msgstr ""
+
+# TV interface
+msgctxt "#30830"
+msgid "TV interface"
+msgstr ""
+
+msgctxt "#30831"
+msgid "Modern full-screen interface with rows and tiles, made for remote controls"
+msgstr ""
+
+msgctxt "#30832"
+msgid "Home"
+msgstr ""
+
+msgctxt "#30833"
+msgid "Subscriptions"
+msgstr ""
+
+msgctxt "#30834"
+msgid "Explore"
+msgstr ""
+
+msgctxt "#30835"
+msgid "Library"
+msgstr ""
+
+msgctxt "#30836"
+msgid "Account"
+msgstr ""
+
+msgctxt "#30837"
+msgid "Continue watching"
+msgstr ""
+
+msgctxt "#30838"
+msgid "Show all"
+msgstr ""
+
+msgctxt "#30839"
+msgid "Loading…"
+msgstr ""
+
+msgctxt "#30840"
+msgid "Nothing here yet"
+msgstr ""
+
+msgctxt "#30841"
+msgid "Classic menu"
+msgstr ""
+
+msgctxt "#30842"
+msgid "Resume from %s"
+msgstr ""
+
+msgctxt "#30843"
+msgid "Play from beginning"
+msgstr ""
+
+msgctxt "#30844"
+msgid "Open"
+msgstr ""
+
+msgctxt "#30845"
+msgid "Open TV interface when starting the add-on"
+msgstr ""
+
+msgctxt "#30846"
+msgid "Show background preview of the selected item"
+msgstr ""
+
+msgctxt "#30847"
+msgid "Show \"Continue watching\" row"
+msgstr ""
+
+msgctxt "#30848"
+msgid "Show \"TV interface\" in the classic menu"
+msgstr ""
+
+msgctxt "#30849"
+msgid "Recent searches"
+msgstr ""
+
+msgctxt "#30850"
+msgid "Recommendations, new videos from your subscriptions and what's trending"
+msgstr ""
+
+msgctxt "#30851"
+msgid "New videos and your subscribed channels"
+msgstr ""
+
+msgctxt "#30852"
+msgid "Trending, live streams and channels to discover"
+msgstr ""
+
+msgctxt "#30853"
+msgid "History, watch later, likes, playlists and bookmarks"
+msgstr ""
+
+msgctxt "#30854"
+msgid "Search for videos, channels and playlists"
+msgstr ""
+
+msgctxt "#30855"
+msgid "Sign in, switch user, settings and the classic menu"
+msgstr ""
+
+msgctxt "#30856"
+msgid "Account & settings"
+msgstr ""
+
+msgctxt "#30857"
+msgid "Shortcuts"
+msgstr ""
+
+msgctxt "#30858"
+msgid "Page %s"
+msgstr ""
+
+msgctxt "#30859"
+msgid "Watched in Kodi"
+msgstr ""
+
+msgctxt "#30860"
+msgid "Previous page"
+msgstr ""
+
+msgctxt "#30861"
+msgid "Next page: %s"
+msgstr ""

@@ -35,6 +35,7 @@ from ..kodion import AbstractProvider, logging
 from ..kodion.constants import (
     ADDON_ID,
     CHANNEL_ID,
+    CLASSIC_MENU,
     CONTENT,
     HIDE_CHANNELS,
     HIDE_FOLDERS,
@@ -54,6 +55,7 @@ from ..kodion.constants import (
 from ..kodion.items import (
     BaseItem,
     BookmarkItem,
+    CommandItem,
     DirectoryItem,
     NewSearchItem,
     SearchItem,
@@ -1409,7 +1411,21 @@ class Provider(AbstractProvider):
         localize = context.localize
         settings = context.get_settings()
         settings_bool = settings.get_bool
-        bold = context.get_ui().bold
+        ui = context.get_ui()
+        bold = ui.bold
+
+        home_window_command = 'RunScript({0},home)'.format(ADDON_ID)
+        # Open the TV home window instead of the classic menu, but only when
+        # the user opens the add-on in a media window. Widgets, JSON-RPC
+        # requests and the home window itself still get the classic menu.
+        # If the home window is still running in the background, it is
+        # brought back to the front.
+        if (not context.get_param(CLASSIC_MENU)
+                and context.get_handle() != -1
+                and settings_bool(settings.HOME_WINDOW_ON_START, True)
+                and ui.get_infobool('Window.IsMedia')):
+            context.execute(home_window_command)
+            return False, {provider.CACHE_TO_DISC: False}
 
         logged_in = provider.get_client(context).logged_in
         # _.get_my_playlists()
@@ -1421,6 +1437,16 @@ class Provider(AbstractProvider):
             },
             provider.CACHE_TO_DISC: False,
         }
+
+        # TV home window
+        if settings_bool(settings.SHOW_HOME_WINDOW, True):
+            result.append(CommandItem(
+                bold(localize('home_window')),
+                home_window_command,
+                context,
+                image='{media}/home.png',
+                plot=localize('home_window.description'),
+            ))
 
         # sign in
         if ((not logged_in or logged_in == 'partially')
@@ -1658,9 +1684,12 @@ class Provider(AbstractProvider):
                 ]
                 watch_history_item.add_context_menu(context_menu)
                 result.append(watch_history_item)
-            elif local_history:
+            # The YouTube history only contains videos watched in Kodi if
+            # remote history updates are enabled, so the local history is
+            # also listed when it is enabled, rather than only without login
+            if local_history:
                 watch_history_item = DirectoryItem(
-                    localize('history'),
+                    localize('history.local' if history_id else 'history'),
                     create_uri((PATHS.HISTORY, 'list')),
                     image='{media}/history.png',
                 )

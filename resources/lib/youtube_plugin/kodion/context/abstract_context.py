@@ -28,6 +28,7 @@ from ..constants import (
     BOOL_FROM_STR,
     CHANNEL_ID,
     CHANNEL_IDS,
+    CLASSIC_MENU,
     CLIP,
     CONTEXT_MENU,
     END,
@@ -42,6 +43,7 @@ from ..constants import (
     HIDE_SEARCH,
     HIDE_SHORTS,
     HIDE_VIDEOS,
+    HOME_WINDOW_REQUEST,
     INCOGNITO,
     ITEMS_PER_PAGE,
     ITEM_FILTER,
@@ -91,6 +93,7 @@ class AbstractContext(object):
     _settings = None
 
     _BOOL_PARAMS = frozenset((
+        CLASSIC_MENU,
         CONTEXT_MENU,
         KEYMAP,
         PLAY_FORCE_AUDIO,
@@ -112,6 +115,7 @@ class AbstractContext(object):
         HIDE_SEARCH,
         HIDE_SHORTS,
         HIDE_VIDEOS,
+        HOME_WINDOW_REQUEST,
         INCOGNITO,
         'location',
         'logged_in',

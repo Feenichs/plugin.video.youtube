@@ -20,6 +20,7 @@ from ...constants import (
     CONTAINER_ID,
     CONTAINER_POSITION,
     FORCE_PLAY_PARAMS,
+    HOME_WINDOW_REQUEST,
     PATHS,
     PLAYBACK_FAILED,
     PLAYER_VIDEO_ID,
@@ -95,6 +96,12 @@ class XbmcPlugin(AbstractPlugin):
             **kwargs):
         handle = context.get_handle()
         ui = context.get_ui()
+
+        # Listings requested by the TV interface are loaded in the background.
+        # Do not block them with modal dialogs and never navigate away from
+        # the TV interface, e.g. to the parent folder if a listing is empty.
+        home_window = bool(context.get_param(HOME_WINDOW_REQUEST))
+        ui.quiet = home_window
 
         uri = context.get_uri()
         path = context.get_path().rstrip('/')
@@ -267,7 +274,7 @@ class XbmcPlugin(AbstractPlugin):
                         plot=context.localize('page.empty'),
                     )
                 ]
-                if force_return:
+                if force_return and not home_window:
                     _, _post_run_action = self.uri_action(
                         context,
                         'command://Action(Back)'
@@ -353,6 +360,8 @@ class XbmcPlugin(AbstractPlugin):
                 ui.clear_property(param)
 
             fallback = options.get(provider.FALLBACK, not force_return)
+            if home_window:
+                fallback = False
             if isinstance(fallback, string_type) and fallback != uri:
                 if options.get(provider.POST_RUN):
                     _, _post_run_action = self.uri_action(

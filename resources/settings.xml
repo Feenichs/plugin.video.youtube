@@ -16,6 +16,38 @@
                     </control>
                 </setting>
             </group>
+            <group id="home_window" label="30830">
+                <setting id="youtube.home_window.on_start" type="boolean" label="30845" help="">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle"/>
+                </setting>
+                <setting id="youtube.home_window.hero" type="boolean" label="30846" help="">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle"/>
+                </setting>
+                <setting id="youtube.home_window.continue_watching" type="boolean" label="30847" help="">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle"/>
+                </setting>
+                <setting id="youtube.folder.home_window.show" type="boolean" label="30848" help="">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle"/>
+                </setting>
+                <setting id="youtube.home_window.open" type="action" label="30830" help="">
+                    <level>0</level>
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <data>RunScript($ID,home)</data>
+                    <control format="action" type="button">
+                        <close>true</close>
+                    </control>
+                </setting>
+            </group>
             <group id="player_settings">
                 <setting id="kodion.mpd.videos" type="boolean" label="30688" help="30723">
                     <level>0</level>

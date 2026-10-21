@@ -29,7 +29,6 @@ from ...kodion import KodionException, logging
 from ...kodion.constants import (
     CHANNEL_ID,
     FANART_TYPE,
-    FOLDER_URI,
     HIDE_LIVE,
     HIDE_MEMBERS,
     HIDE_NEXT_PAGE,
@@ -37,6 +36,7 @@ from ...kodion.constants import (
     HIDE_SEARCH,
     HIDE_SHORTS,
     HIDE_VIDEOS,
+    HOME_WINDOW_REQUEST,
     INHERITED_PARAMS,
     ITEM_FILTER,
     PAGE,
@@ -878,6 +878,16 @@ def response_to_items(provider,
         next_page = current_page + 1
 
         items = filtered_items
+        # Never repeat the videos of the previous page, even if they were not
+        # excluded while filling the page, e.g. if the response had no token
+        previous_page = params.get('exclude')
+        if not allow_duplicates and previous_page:
+            previous_page = set(previous_page)
+            items = [
+                item for item in items
+                if not (isinstance(item, MediaItem)
+                        and item.video_id in previous_page)
+            ]
         if not items:
             return items
 
@@ -900,15 +910,17 @@ def response_to_items(provider,
                       page=next_page,
                       filtered=filtered,
                       exclude=exclude_next)
+    new_params.pop(HOME_WINDOW_REQUEST, None)
     if post_fill_attempts <= 0:
-        next_page = 1
-        new_params['page'] = 1
-        if 'page_token' in new_params:
-            del new_params['page_token']
-        elif 'page' in params:
-            new_params['page_token'] = ''
+        # no new items were found, the end of the listing has been reached.
+        # Previously a next page item linking back to page 1 was added here,
+        # so paging through a listing never ended and started over.
+        return items
     elif page_token == next_page:
         new_params['page_token'] = ''
+    elif page_token and page_token == params.get('page_token'):
+        # the same continuation was returned again, the listing would repeat
+        return items
     elif page_token:
         new_params['page_token'] = page_token
     else:
@@ -926,10 +938,8 @@ def response_to_items(provider,
 
         if (next_page - 1) * yt_results_per_page < yt_total_results:
             new_params['items_per_page'] = yt_results_per_page
-        elif ui.get_container_info(FOLDER_URI):
-            next_page = 1
-            new_params['page'] = 1
         else:
+            # end of the listing, do not wrap around to page 1
             return items
 
     if next_page > 1:

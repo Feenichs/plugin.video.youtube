@@ -73,6 +73,11 @@ SHOW_SWITCH_USER = 'youtube.folder.switch.user.show'  # (bool)
 SHOW_SIGN_OUT = 'youtube.folder.sign.out.show'  # (bool)
 SHOW_SETUP_WIZARD = 'youtube.folder.settings.show'  # (bool)
 SHOW_SETTINGS = 'youtube.folder.settings.advanced.show'  # (bool)
+SHOW_HOME_WINDOW = 'youtube.folder.home_window.show'  # (bool)
+
+HOME_WINDOW_ON_START = 'youtube.home_window.on_start'  # (bool)
+HOME_WINDOW_HERO = 'youtube.home_window.hero'  # (bool)
+HOME_WINDOW_CONTINUE = 'youtube.home_window.continue_watching'  # (bool)
 
 WATCH_LATER_PLAYLIST = 'youtube.folder.watch_later.playlist'  # (str)
 HISTORY_PLAYLIST = 'youtube.folder.history.playlist'  # (str)

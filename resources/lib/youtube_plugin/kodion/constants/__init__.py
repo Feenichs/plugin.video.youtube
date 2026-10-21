@@ -149,6 +149,8 @@ CONTAINER_POSITION = 'container_position'
 DEVELOPER_CONFIGS = 'configs'
 LICENSE_TOKEN = 'license_token'
 LICENSE_URL = 'license_url'
+HOME_WINDOW_ACTIVE = 'home_window_active'
+HOME_WINDOW_NOTICE = 'home_window_notice'
 MARK_AS_LABEL = 'mark_as_label'
 PLAYER_DATA = 'player_json'
 PLAYER_VIDEO_ID = 'player_video_id'
@@ -166,7 +168,9 @@ WINDOW_RETURN = 'window_return'
 ACTION = 'action'
 ADDON_ID_PARAM = 'addon_id'
 CHANNEL_IDS = 'channel_ids'
+CLASSIC_MENU = 'classic'
 CLIP = 'clip'
+HOME_WINDOW_REQUEST = 'home_window'
 END = 'end'
 FANART_TYPE = 'fanart_type'
 HIDE_CHANNELS = 'hide_channels'
@@ -311,6 +315,8 @@ __all__ = (
     'DEVELOPER_CONFIGS',
     'LICENSE_TOKEN',
     'LICENSE_URL',
+    'HOME_WINDOW_ACTIVE',
+    'HOME_WINDOW_NOTICE',
     'MARK_AS_LABEL',
     'PLAYER_DATA',
     'PLAYER_VIDEO_ID',
@@ -328,7 +334,9 @@ __all__ = (
     'ACTION',
     'ADDON_ID_PARAM',
     'CHANNEL_IDS',
+    'CLASSIC_MENU',
     'CLIP',
+    'HOME_WINDOW_REQUEST',
     'END',
     'FANART_TYPE',
     'HIDE_CHANNELS',

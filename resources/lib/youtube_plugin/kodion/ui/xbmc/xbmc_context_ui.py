@@ -10,6 +10,7 @@
 
 from __future__ import absolute_import, division, unicode_literals
 
+import time
 from weakref import proxy
 
 from ..abstract_context_ui import AbstractContextUI
@@ -31,6 +32,7 @@ from ...constants import (
     HAS_FOLDERS,
     HAS_PARENT,
     HIDE_PROGRESS,
+    HOME_WINDOW_NOTICE,
     LISTITEM_INFO,
     LISTITEM_PROP,
     NUM_ALL_ITEMS,
@@ -101,8 +103,19 @@ class XbmcContextUI(AbstractContextUI):
         dialog = xbmcgui.Dialog()
         return dialog.yesno(title, text, nolabel=nolabel, yeslabel=yeslabel)
 
-    @staticmethod
-    def on_ok(title, text):
+    # Set for listings requested in the background by the TV interface,
+    # where a modal dialog would block the request until it is dismissed
+    quiet = False
+
+    def on_ok(self, title, text):
+        if self.quiet:
+            # show each notice at most once a minute, as the TV interface
+            # loads several listings that can fail for the same reason
+            notice = '|'.join((str(int(time.time() // 60)), title, text))
+            if self.get_property(HOME_WINDOW_NOTICE) != notice:
+                self.set_property(HOME_WINDOW_NOTICE, notice)
+                self.show_notification(text, title, time_ms=8000)
+            return True
         dialog = xbmcgui.Dialog()
         return dialog.ok(title, text)
 
