@@ -57,6 +57,9 @@ CACHE_SECONDS = 300
 GRID_PAGE_SIZE = 30
 HERO_IMAGE = 'https://i.ytimg.com/vi/{0}/{1}.jpg'
 TAB_SWITCH_DELAY = 0.35
+# delay before refreshing after playback has ended, so that the history and
+# resume points are updated and a following playlist item has started
+PLAYBACK_END_DELAY = 2
 
 # Properties mirrored to Window(home) for the plugin's context menu actions,
 # the same way the service does it for the classic list views
@@ -107,6 +110,10 @@ class HomeWindow(xbmcgui.WindowXML):
         # index of the topmost visible row, rows above it are hidden
         self._row_offset = 0
         self._grid_origin = None
+        self._window_id = None
+        # refresh postponed while a video is playing in the background
+        self._refresh_pending = False
+        self._player = _PlayerEvents(self._on_playback_end)
 
     def setup(self, context):
         self._context = context
@@ -118,10 +125,19 @@ class HomeWindow(xbmcgui.WindowXML):
     def onInit(self):
         # remember the window id, so that the window can be brought back to
         # the front if it is opened again while it is still running
-        self._ui.set_property(HOME_WINDOW_ACTIVE,
-                              str(xbmcgui.getCurrentWindowId()))
+        self._window_id = xbmcgui.getCurrentWindowId()
+        self._ui.set_property(HOME_WINDOW_ACTIVE, str(self._window_id))
         if self._initialised:
             # returning from playback or another window
+            if xbmc.getCondVisibility('Player.HasMedia'):
+                # reloading all rows while a video keeps playing in the
+                # background takes away resources from the playback, refresh
+                # once playback has ended instead
+                self._refresh_pending = True
+                self._restore = None
+                self._sync_row_focus()
+                return
+            self._refresh_pending = False
             self._refresh_view(delay=0)
             return
         self._initialised = True
@@ -205,6 +221,24 @@ class HomeWindow(xbmcgui.WindowXML):
 
     def _filled_rows(self):
         return sorted(ROW_LISTS.index(list_id) for list_id in self._row_data)
+
+    def _sync_row_focus(self):
+        """
+        Make the focused row the topmost visible one, Kodi may restore the
+        focus to a row while the rows above it are shown
+        """
+        if self._stack:
+            return
+        focus_id = self.getFocusId()
+        if focus_id not in ROW_LISTS:
+            return
+        index = ROW_LISTS.index(focus_id)
+        if index in self._filled_rows():
+            if index != self._row_offset:
+                self._set_row_offset(index)
+        else:
+            self._set_row_offset(0)
+            self._focus_content()
 
     def _set_row_offset(self, offset):
         """Show the filled rows from offset on, hide the rows above"""
@@ -400,6 +434,11 @@ class HomeWindow(xbmcgui.WindowXML):
                 self.setProperty('loading', '')
                 if not shown:
                     self.setProperty('empty', 'true')
+                with self._lock:
+                    if self._restore and self._restore[0] in ROW_LISTS:
+                        # the remembered row is empty now
+                        self._restore = None
+                    self._sync_row_focus()
 
         self._start(_run)
 
@@ -897,6 +936,21 @@ class HomeWindow(xbmcgui.WindowXML):
         else:
             self._refresh_view(delay=0)
 
+    def _on_playback_end(self):
+        if not self._refresh_pending or self._closing:
+            return
+        monitor = xbmc.Monitor()
+        if monitor.waitForAbort(PLAYBACK_END_DELAY):
+            return
+        if (self._closing
+                or xbmc.getCondVisibility('Player.HasMedia')
+                or xbmcgui.getCurrentWindowId() != self._window_id):
+            # still playing or the window is not shown, onInit refreshes
+            # the view once it is shown again
+            return
+        self._refresh_pending = False
+        self._refresh_view(delay=0)
+
     def _remember_focus(self):
         focus_id = self.getFocusId()
         if focus_id == GRID_PANEL or focus_id in ROW_LISTS:
@@ -910,6 +964,10 @@ class HomeWindow(xbmcgui.WindowXML):
             time.sleep(delay)
         # the focus is remembered before playback, as Kodi may move it while
         # the window is activated again
+        if self._restore and ((self._restore[0] == GRID_PANEL)
+                              != bool(self._grid and self._stack)):
+            # remembered for another view
+            self._restore = None
         if not self._restore:
             self._remember_focus()
         if self._grid and self._stack:
@@ -973,6 +1031,26 @@ class HomeWindow(xbmcgui.WindowXML):
         thread.daemon = True
         thread.start()
         return thread
+
+
+class _PlayerEvents(xbmc.Player):
+    def __init__(self, on_playback_end):
+        super(_PlayerEvents, self).__init__()
+        self._on_playback_end = on_playback_end
+
+    def _notify(self):
+        thread = threading.Thread(target=self._on_playback_end)
+        thread.daemon = True
+        thread.start()
+
+    def onPlayBackEnded(self):
+        self._notify()
+
+    def onPlayBackStopped(self):
+        self._notify()
+
+    def onPlayBackError(self):
+        self._notify()
 
 
 def _activate_running_window(value, timeout=3):

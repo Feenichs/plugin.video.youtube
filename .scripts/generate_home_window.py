@@ -384,26 +384,46 @@ WINDOW_TEMPLATE = '''<?xml version="1.0" encoding="UTF-8"?>
     <animation effect="fade" time="250">WindowOpen</animation>
     <animation effect="fade" time="200">WindowClose</animation>
     <controls>
+        <!--
+            A video that keeps playing in the background has to be rendered,
+            otherwise it runs out of sync with the audio. It is shown in the
+            preview area, or dimmed behind the grid.
+        -->
+        <control type="videowindow">
+            <width>1920</width><height>1080</height>
+            <visible>Player.HasVideo + !{hero_visible}</visible>
+        </control>
         <control type="image">
             <width>1920</width><height>1080</height>
             <texture colordiffuse="{background}">yt_white.png</texture>
+            <visible>!Player.HasVideo | {hero_visible}</visible>
+        </control>
+        <control type="image">
+            <width>1920</width><height>1080</height>
+            <texture colordiffuse="{background_dimmed}">yt_white.png</texture>
+            <visible>Player.HasVideo + !{hero_visible}</visible>
         </control>
 
         <!-- Preview of the selected item -->
         <control type="group">
-            <visible>String.IsEqual(Window.Property(view),tab) + String.IsEqual(Window.Property(hero),true)</visible>
+            <visible>{hero_visible}</visible>
             <control type="image">
                 <left>620</left><top>0</top><width>1300</width><height>732</height>
                 <aspectratio>scale</aspectratio>
                 <fadetime>300</fadetime>
                 <texture background="true">$INFO[ListItem.Art(fanart)]</texture>
+                <visible>!Player.HasVideo</visible>
             </control>
             <control type="image">
                 <left>620</left><top>0</top><width>1300</width><height>732</height>
                 <aspectratio>scale</aspectratio>
                 <fadetime>300</fadetime>
                 <texture background="true">$INFO[ListItem.Property(hero)]</texture>
-                <visible>!String.IsEmpty(ListItem.Property(hero))</visible>
+                <visible>!Player.HasVideo + !String.IsEmpty(ListItem.Property(hero))</visible>
+            </control>
+            <control type="videowindow">
+                <left>620</left><top>0</top><width>1300</width><height>732</height>
+                <visible>Player.HasVideo</visible>
             </control>
             <control type="image">
                 <left>620</left><top>0</top><width>760</width><height>732</height>
@@ -573,6 +593,9 @@ def generate_window():
     grid_width = 455
     xml = WINDOW_TEMPLATE.format(
         background=BACKGROUND,
+        background_dimmed='E6' + BACKGROUND[2:],
+        hero_visible='(String.IsEqual(Window.Property(view),tab)'
+                     ' + String.IsEqual(Window.Property(hero),true))',
         text=TEXT,
         dim=TEXT_DIM,
         accent=ACCENT,

@@ -2423,3 +2423,7 @@ msgstr "Vorherige Seite"
 msgctxt "#30861"
 msgid "Next page: %s"
 msgstr "Nächste Seite: %s"
+
+msgctxt "#30862"
+msgid "HTTP server port was unavailable, now using port %s"
+msgstr "HTTP-Server-Port war nicht verfügbar, verwende jetzt Port %s"
