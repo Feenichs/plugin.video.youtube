@@ -1,3 +1,11 @@
+## v7.4.4.3 (TV interface fork)
+### Fixed
+- Fix audible jumps during playback of videos with surround sound. AC-3,
+  E-AC-3 and AAC streams were offered as one automatic audio track, so
+  InputStream Adaptive switched between them and reopened the audio output
+  each time. The automatic track now only contains one codec and channel
+  layout, the others can still be selected manually.
+
 ## v7.4.4.2 (TV interface fork)
 ### New
 - Show a video that keeps playing in the background in the TV interface
