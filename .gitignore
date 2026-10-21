@@ -33,3 +33,6 @@ append_to_languages.py
 new_strings.txt
 convert_settings.py
 core.po
+
+# local build output and backups (may contain personal tokens)
+dist/

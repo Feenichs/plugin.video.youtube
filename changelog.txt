@@ -1,3 +1,27 @@
+## v7.4.4.1 (TV interface fork)
+### New
+- Add full-screen TV interface in the style of YouTube on Fire TV / smart TVs:
+  tab bar (Home, Subscriptions, Explore, Library, Search, Account), rows of
+  tiles, large preview of the selected video, grid pages with 30 items
+- Add "Continue watching" row based on the local playback history
+- Add "Watched in Kodi" entry when signed in, as the YouTube history only
+  contains videos watched in Kodi if remote history updates are enabled
+- Add settings for the TV interface (open on start, preview, continue watching)
+
+### Fixed
+- Fix path traversal in the local HTTP server (/mpd?file=)
+- Fix CSRF and XSS on the API configuration page of the HTTP server
+- Fix crash on missing Content-Length in the HTTP server
+- Fix NameError in youtube_requests.get_live for url based lookups
+- Fix playing the second to last item when playing a playlist from the end
+- Fix wrong item returned from playlist processing when items were skipped
+- Fix cache entries lost on update/refresh and not removed from the database
+- Fix repeatedly skipping to the next item when reaching the end time of a clip
+- Fix one revoked refresh token removing all refresh tokens
+- Fix untranslated "key.requirement" prompt when no API key is available
+- Fix next page items wrapping around to page 1 at the end of a listing
+- Fix listings repeating the videos of the previous page
+
 ## v7.4.4
 ### Fixed
 - Fix not including FolderPath in current container details #1467
