@@ -28,6 +28,7 @@ from ..compatibility import (
     BaseHTTPRequestHandler,
     TCPServer,
     ThreadingMixIn,
+    entity_escape,
     parse_qs,
     urlencode,
     urlsplit,
@@ -282,10 +283,8 @@ class RequestHandler(BaseHTTPRequestHandler, object):
         elif path['path'].startswith(PATHS.MPD):
             try:
                 file = path['params'].get('file', empty)[0]
-                if file:
-                    file_path = os.path.join(self.BASE_PATH, file)
-                else:
-                    file_path = None
+                file_path = self._get_temp_file_path(file)
+                if not file_path:
                     raise IOError
 
                 file_size = os.path.getsize(file_path)
@@ -322,7 +321,8 @@ class RequestHandler(BaseHTTPRequestHandler, object):
 
         elif path['path'].startswith(PATHS.REDIRECT):
             url = path['params'].get('url', empty)[0]
-            if url:
+            # only redirect to web URLs, not to arbitrary schemes
+            if url and urlsplit(url).scheme in {'http', 'https'}:
                 wait(1)
                 self.send_response(301)
                 self.send_header('Location', url)
@@ -606,10 +606,8 @@ class RequestHandler(BaseHTTPRequestHandler, object):
         if path['path'].startswith(PATHS.MPD):
             try:
                 file = path['params'].get('file', empty)[0]
-                if file:
-                    file_path = os.path.join(self.BASE_PATH, file)
-                else:
-                    file_path = None
+                file_path = self._get_temp_file_path(file)
+                if not file_path:
                     raise IOError
 
                 file_size = os.path.getsize(file_path)
@@ -642,9 +640,17 @@ class RequestHandler(BaseHTTPRequestHandler, object):
         empty = [None]
 
         if path['path'] == PATHS.API_SUBMIT and settings.api_config_page():
+            if not self._is_same_origin():
+                self.send_error(403)
+                return
+
+            length = self._get_content_length()
+            if length is None:
+                self.send_error(411)
+                return
+
             xbmc.executebuiltin('Dialog.Close(addonsettings,true)')
 
-            length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(length)
 
             query = post_data.decode('utf-8', 'ignore')
@@ -713,7 +719,10 @@ class RequestHandler(BaseHTTPRequestHandler, object):
 
             size_limit = None
 
-            length = int(self.headers['Content-Length'])
+            length = self._get_content_length()
+            if length is None:
+                self.send_error(411)
+                return
             post_data = self.rfile.read(length)
 
             li_headers = {
@@ -786,6 +795,33 @@ class RequestHandler(BaseHTTPRequestHandler, object):
             self.send_error(501)
 
     # noinspection PyShadowingBuiltins
+    @classmethod
+    def _get_temp_file_path(cls, file):
+        # Only serve files located directly within BASE_PATH to prevent
+        # absolute paths or relative path traversal escaping the temp folder
+        if not file:
+            return None
+        base_path = os.path.realpath(cls.BASE_PATH)
+        file_path = os.path.realpath(os.path.join(base_path, file))
+        if os.path.dirname(file_path) != base_path:
+            return None
+        return file_path
+
+    def _is_same_origin(self):
+        # Reject cross-site form submissions (CSRF) from other web pages
+        host = self.headers.get('Host')
+        origin = self.headers.get('Origin') or self.headers.get('Referer')
+        if not origin or origin == 'null':
+            return False
+        return bool(host) and urlsplit(origin).netloc == host
+
+    def _get_content_length(self):
+        try:
+            length = int(self.headers.get('Content-Length', ''))
+        except ValueError:
+            return None
+        return length if length >= 0 else None
+
     def log_message(self, format, *args):
         return
 
@@ -816,9 +852,9 @@ class RequestHandler(BaseHTTPRequestHandler, object):
             api_key_head=localize('api.key'),
             api_id_head=localize('api.id'),
             api_secret_head=localize('api.secret'),
-            api_id_value=api_id,
-            api_key_value=api_key,
-            api_secret_value=api_secret,
+            api_id_value=entity_escape(api_id or ''),
+            api_key_value=entity_escape(api_key or ''),
+            api_secret_value=entity_escape(api_secret or ''),
             submit=localize('api.config.save'),
             action_url=PATHS.API_SUBMIT,
             header=localize('api.config'),
@@ -834,8 +870,8 @@ class RequestHandler(BaseHTTPRequestHandler, object):
         html = html.format(
             css=css,
             title=localize('api.config'),
-            updated=updated_keys,
-            enabled=enabled,
+            updated=entity_escape(updated_keys),
+            enabled=entity_escape(enabled),
             header=localize('api.config'),
         )
         return html
