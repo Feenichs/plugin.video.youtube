@@ -1,3 +1,15 @@
+## v7.4.4.2 (TV interface fork)
+### New
+- Show a video that keeps playing in the background in the TV interface
+  (preview area, or dimmed behind grid pages)
+
+### Fixed
+- Fix video running out of sync with the audio after browsing the TV
+  interface during playback
+- Fix focused row being off screen when returning to the TV interface
+- Use a free port if the HTTP server port is in use or reserved by Windows
+  (e.g. WinError 10013 with Hyper-V, WSL or Docker) and save it
+
 ## v7.4.4.1 (TV interface fork)
 ### New
 - Add full-screen TV interface in the style of YouTube on Fire TV / smart TVs:
