@@ -13,22 +13,22 @@
         -->
         <control type="videowindow">
             <width>1920</width><height>1080</height>
-            <visible>Player.HasVideo + !(String.IsEqual(Window.Property(view),tab) + String.IsEqual(Window.Property(hero),true))</visible>
+            <visible>Player.HasVideo + ![String.IsEqual(Window.Property(view),tab) + String.IsEqual(Window.Property(hero),true)]</visible>
         </control>
         <control type="image">
             <width>1920</width><height>1080</height>
             <texture colordiffuse="FF0F0F0F">yt_white.png</texture>
-            <visible>!Player.HasVideo | (String.IsEqual(Window.Property(view),tab) + String.IsEqual(Window.Property(hero),true))</visible>
+            <visible>!Player.HasVideo | [String.IsEqual(Window.Property(view),tab) + String.IsEqual(Window.Property(hero),true)]</visible>
         </control>
         <control type="image">
             <width>1920</width><height>1080</height>
             <texture colordiffuse="E60F0F0F">yt_white.png</texture>
-            <visible>Player.HasVideo + !(String.IsEqual(Window.Property(view),tab) + String.IsEqual(Window.Property(hero),true))</visible>
+            <visible>Player.HasVideo + ![String.IsEqual(Window.Property(view),tab) + String.IsEqual(Window.Property(hero),true)]</visible>
         </control>
 
         <!-- Preview of the selected item -->
         <control type="group">
-            <visible>(String.IsEqual(Window.Property(view),tab) + String.IsEqual(Window.Property(hero),true))</visible>
+            <visible>[String.IsEqual(Window.Property(view),tab) + String.IsEqual(Window.Property(hero),true)]</visible>
             <control type="image">
                 <left>620</left><top>0</top><width>1300</width><height>732</height>
                 <aspectratio>scale</aspectratio>

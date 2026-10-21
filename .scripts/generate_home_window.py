@@ -594,8 +594,9 @@ def generate_window():
     xml = WINDOW_TEMPLATE.format(
         background=BACKGROUND,
         background_dimmed='E6' + BACKGROUND[2:],
-        hero_visible='(String.IsEqual(Window.Property(view),tab)'
-                     ' + String.IsEqual(Window.Property(hero),true))',
+        # Kodi groups conditions with square brackets
+        hero_visible='[String.IsEqual(Window.Property(view),tab)'
+                     ' + String.IsEqual(Window.Property(hero),true)]',
         text=TEXT,
         dim=TEXT_DIM,
         accent=ACCENT,
