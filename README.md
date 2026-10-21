@@ -12,6 +12,14 @@ preview of the selected video and grid pages with 30 videos, made for remote con
 features of the original are kept, the classic menu is still available. It also includes a
 number of bug fixes, see [changelog.txt](changelog.txt).
 
+## Screenshots
+
+![TV interface: tab bar, preview of the selected video and rows of tiles](screenshots/tv-explore.jpg)
+
+![Grid page with 30 videos and tiles for the previous and next page](screenshots/tv-grid.jpg)
+
+![Full context menu of the add-on on every tile](screenshots/tv-context-menu.jpg)
+
 ## Installation
 
 1. Download the ZIP from the [releases](../../releases) of this repository.
