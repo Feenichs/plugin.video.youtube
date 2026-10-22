@@ -1,3 +1,9 @@
+## v7.4.4.4 (TV interface fork)
+### Fixed
+- Fix "Resume from" in the TV interface. Kodi does not pass the resume
+  option of PlayMedia() on to the plugin, so the video always started from
+  the beginning. The plugin now seeks to the resume point itself.
+
 ## v7.4.4.3 (TV interface fork)
 ### Fixed
 - Fix audible jumps during playback of videos with surround sound. AC-3,
