@@ -161,6 +161,23 @@ def request_uri(uri):
                     '?', urlencode(params)))
 
 
+def seek_uri(uri, seconds):
+    """
+    Let the plugin seek to the resume point itself. Kodi does not pass the
+    resume option of PlayMedia() on to the plugin, so the video would start
+    from the beginning.
+    """
+    parts = urlsplit(uri)
+    params = [
+        (key, value)
+        for key, value in parse_qsl(parts.query, keep_blank_values=True)
+        if key != 'seek'
+    ]
+    params.append(('seek', '%.3f' % seconds))
+    return ''.join((parts.scheme, '://', parts.netloc, parts.path,
+                    '?', urlencode(params)))
+
+
 def is_action_uri(uri):
     path = plugin_path(uri)
     return bool(path) and path.startswith(ACTION_PATHS)

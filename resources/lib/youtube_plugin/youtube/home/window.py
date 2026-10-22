@@ -802,7 +802,6 @@ class HomeWindow(xbmcgui.WindowXML):
 
     def _play(self, item):
         uri = item['uri']
-        option = ''
         if item['resume'] > 0 and item['progress'] < 100:
             localize = self._context.localize
             choice = xbmcgui.Dialog().contextmenu([
@@ -812,9 +811,12 @@ class HomeWindow(xbmcgui.WindowXML):
             ])
             if choice < 0:
                 return
-            option = ',resume' if choice == 0 else ',noresume'
+            if choice == 0:
+                uri = data.seek_uri(uri, item['resume'])
         self._remember_focus()
-        xbmc.executebuiltin('PlayMedia({0}{1})'.format(uri, option))
+        # the plugin seeks to the resume point, a bookmark of Kodi must not
+        # move the start position as well
+        xbmc.executebuiltin('PlayMedia({0},noresume)'.format(uri))
 
     def _search(self, input_uri):
         localize = self._context.localize
