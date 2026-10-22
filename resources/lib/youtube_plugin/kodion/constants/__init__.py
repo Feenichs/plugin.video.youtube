@@ -151,6 +151,7 @@ LICENSE_TOKEN = 'license_token'
 LICENSE_URL = 'license_url'
 HOME_WINDOW_ACTIVE = 'home_window_active'
 HOME_WINDOW_NOTICE = 'home_window_notice'
+HOME_WINDOW_TAB = 'home_window_tab'
 MARK_AS_LABEL = 'mark_as_label'
 PLAYER_DATA = 'player_json'
 PLAYER_VIDEO_ID = 'player_video_id'
@@ -317,6 +318,7 @@ __all__ = (
     'LICENSE_URL',
     'HOME_WINDOW_ACTIVE',
     'HOME_WINDOW_NOTICE',
+    'HOME_WINDOW_TAB',
     'MARK_AS_LABEL',
     'PLAYER_DATA',
     'PLAYER_VIDEO_ID',

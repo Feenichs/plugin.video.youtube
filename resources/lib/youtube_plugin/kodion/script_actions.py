@@ -539,7 +539,7 @@ def run(argv):
         if category == 'home':
             from ..youtube.home import open_home_window
 
-            open_home_window(context)
+            open_home_window(context, tab=action)
             return
     finally:
         ui.set_property(WAIT_END_FLAG)

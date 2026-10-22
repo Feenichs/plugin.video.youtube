@@ -24,6 +24,7 @@ from ...kodion.constants import (
     CHANNEL_ID,
     CONTAINER_ID,
     HOME_WINDOW_ACTIVE,
+    HOME_WINDOW_TAB,
     MARK_AS_LABEL,
     PLAYLIST_ID,
     PLAYLIST_ITEM_ID,
@@ -127,7 +128,14 @@ class HomeWindow(xbmcgui.WindowXML):
         # the front if it is opened again while it is still running
         self._window_id = xbmcgui.getCurrentWindowId()
         self._ui.set_property(HOME_WINDOW_ACTIVE, str(self._window_id))
+        # tab requested when the window was opened, e.g. by the search key
+        tab = self._ui.pop_property(HOME_WINDOW_TAB)
+        if tab not in data.TABS:
+            tab = None
         if self._initialised:
+            if tab:
+                self._switch_tab(tab, focus_rows=True)
+                return
             # returning from playback or another window
             if xbmc.getCondVisibility('Player.HasMedia'):
                 # reloading all rows while a video keeps playing in the
@@ -151,7 +159,7 @@ class HomeWindow(xbmcgui.WindowXML):
         self.setProperty('view', 'tab')
         self._update_user()
         self._build_nav()
-        self._load_root()
+        self._load_root(tab=tab, focus_rows=bool(tab))
 
     def onAction(self, action):
         action_id = action.getId()
@@ -319,13 +327,15 @@ class HomeWindow(xbmcgui.WindowXML):
                 nav.getListItem(position).setProperty(
                     'active', 'true' if tab_id == tab else ''
                 )
+                if tab_id == tab:
+                    nav.selectItem(position)
             self._show_rows(self._tabs.get(tab) or [])
         if focus_rows:
             self._focus_content()
 
     # Root and rows
 
-    def _load_root(self, tab=None):
+    def _load_root(self, tab=None, focus_rows=False):
         self.setProperty('loading', 'true')
         live_label = self._context.localize('live')
 
@@ -339,6 +349,7 @@ class HomeWindow(xbmcgui.WindowXML):
             if self._closing:
                 return
             self._switch_tab(tab or self._current_tab or data.TAB_HOME,
+                             focus_rows=focus_rows,
                              force=True)
             if not tab:
                 self.setFocusId(NAV_LIST)
@@ -1080,8 +1091,10 @@ def _activate_running_window(value, timeout=3):
     return False
 
 
-def open_home_window(context):
+def open_home_window(context, tab=None):
     ui = context.get_ui()
+    if tab:
+        ui.set_property(HOME_WINDOW_TAB, tab)
     running = ui.get_property(HOME_WINDOW_ACTIVE)
     if running and _activate_running_window(running):
         return

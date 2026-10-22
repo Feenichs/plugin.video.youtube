@@ -12,7 +12,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 from . import menu_items
 from .directory_item import DirectoryItem
-from ..constants import CHANNEL_ID, INCOGNITO, PATHS
+from ..constants import CHANNEL_ID, CLASSIC_MENU, INCOGNITO, PATHS
 
 
 class SearchItem(DirectoryItem):
@@ -28,7 +28,10 @@ class SearchItem(DirectoryItem):
         if image is None:
             image = '{media}/search.png'
 
-        params = {}
+        # the search history of the classic menu, without this parameter the
+        # search is opened in the TV home window, e.g. by the search dialog of
+        # the skin
+        params = {CLASSIC_MENU: True}
         if location:
             params['location'] = location
 

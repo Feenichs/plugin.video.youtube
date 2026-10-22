@@ -237,6 +237,14 @@ class AbstractProvider(object):
     def on_root(provider, context, re_match):
         raise NotImplementedError()
 
+    def open_home_window(self, context, tab=None):
+        """
+        Open a home window instead of a listing
+
+        :return: True if the home window is opened instead of the listing
+        """
+        return False
+
     @staticmethod
     def on_goto_page(provider, context, re_match):
         ui = context.get_ui()
@@ -427,6 +435,14 @@ class AbstractProvider(object):
                 return result, options
             command = 'list'
             context.set_path(PATHS.SEARCH, command)
+
+        if command == 'list' and provider.open_home_window(context,
+                                                           tab='search'):
+            # no fallback route for the failed listing, see on_root
+            return False, {
+                provider.CACHE_TO_DISC: False,
+                provider.FALLBACK: False,
+            }
 
         if command == 'remove':
             query = params.get('q', '')

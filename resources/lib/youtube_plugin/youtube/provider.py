@@ -45,6 +45,7 @@ from ..kodion.constants import (
     HIDE_SEARCH,
     HIDE_SHORTS,
     HIDE_VIDEOS,
+    HOME_WINDOW_REQUEST,
     INCOGNITO,
     PAGE,
     PATHS,
@@ -1007,6 +1008,28 @@ class Provider(AbstractProvider):
             return v3.response_to_items(self, context, json_data)
         return None
 
+    def open_home_window(self, context, tab=None):
+        """
+        Open the TV home window instead of a listing, but only when the user
+        opens the add-on in a media window. Widgets, JSON-RPC requests and the
+        home window itself still get the listing. Listings of the classic
+        menu are marked with the classic parameter.
+        If the home window is still running in the background, it is brought
+        back to the front.
+        """
+        settings = context.get_settings()
+        ui = context.get_ui()
+        if (context.get_param(CLASSIC_MENU)
+                or context.get_param(HOME_WINDOW_REQUEST)
+                or context.get_handle() == -1
+                or not settings.get_bool(settings.HOME_WINDOW_ON_START, True)
+                or not ui.get_infobool('Window.IsMedia')):
+            return False
+        context.execute('RunScript({0},home{1})'.format(
+            ADDON_ID, '/' + tab if tab else ''
+        ))
+        return True
+
     def on_search_run(self, context, query=None):
         params = context.get_params()
         if query is None:
@@ -1415,17 +1438,15 @@ class Provider(AbstractProvider):
         bold = ui.bold
 
         home_window_command = 'RunScript({0},home)'.format(ADDON_ID)
-        # Open the TV home window instead of the classic menu, but only when
-        # the user opens the add-on in a media window. Widgets, JSON-RPC
-        # requests and the home window itself still get the classic menu.
-        # If the home window is still running in the background, it is
-        # brought back to the front.
-        if (not context.get_param(CLASSIC_MENU)
-                and context.get_handle() != -1
-                and settings_bool(settings.HOME_WINDOW_ON_START, True)
-                and ui.get_infobool('Window.IsMedia')):
-            context.execute(home_window_command)
-            return False, {provider.CACHE_TO_DISC: False}
+        # Open the TV home window instead of the classic menu
+        if provider.open_home_window(context):
+            # no fallback route for the failed listing, it would open the
+            # root in the media window again, which brings the home window
+            # back to the front, and so on in a loop
+            return False, {
+                provider.CACHE_TO_DISC: False,
+                provider.FALLBACK: False,
+            }
 
         logged_in = provider.get_client(context).logged_in
         # _.get_my_playlists()
