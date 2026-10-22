@@ -1,3 +1,14 @@
+## v7.4.4.5 (TV interface fork)
+### New
+- The search dialog of the skin, e.g. opened with the search key of the
+  remote, opens the search of the TV interface instead of the classic
+  search history. A running TV interface is brought to the front and
+  switched to the search tab.
+
+### Fixed
+- Fix the TV interface and the classic menu replacing each other in a loop
+  after going back from the classic menu to the root of the add-on.
+
 ## v7.4.4.4 (TV interface fork)
 ### Fixed
 - Fix "Resume from" in the TV interface. Kodi does not pass the resume
