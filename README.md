@@ -2,13 +2,13 @@
 
 **Deutsch:** Dieser Fork des [YouTube-Addons für Kodi](https://github.com/anxdpanic/plugin.video.youtube)
 bringt eine Oberfläche wie die YouTube-App auf Fire TV und Smart-TVs: Tab-Leiste, Reihen mit
-Kacheln, große Vorschau des ausgewählten Videos und Seiten mit 30 Videos, gemacht für die
+Kacheln, große Vorschau des ausgewählten Videos und Seiten mit 100 Kacheln und Scrollbalken, gemacht für die
 Fernbedienung. Alle Funktionen des Originals bleiben erhalten, das klassische Menü ist weiterhin
 erreichbar. Dazu kommen einige Fehlerbehebungen.
 
 **English:** This fork of the [YouTube add-on for Kodi](https://github.com/anxdpanic/plugin.video.youtube)
 adds an interface like the YouTube app on Fire TV and smart TVs: tab bar, rows of tiles, a large
-preview of the selected video and grid pages with 30 videos, made for remote controls. All
+preview of the selected video and grid pages with 100 tiles and a scrollbar, made for remote controls. All
 features of the original are kept, the classic menu is still available. It also includes a
 number of bug fixes, see [changelog.txt](changelog.txt).
 
@@ -16,7 +16,7 @@ number of bug fixes, see [changelog.txt](changelog.txt).
 
 ![TV interface: tab bar, preview of the selected video and rows of tiles](screenshots/tv-explore.jpg)
 
-![Grid page with 30 videos and tiles for the previous and next page](screenshots/tv-grid.jpg)
+![Grid page with tiles for the previous and next page](screenshots/tv-grid.jpg)
 
 ![Full context menu of the add-on on every tile](screenshots/tv-context-menu.jpg)
 
