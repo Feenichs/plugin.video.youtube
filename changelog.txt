@@ -1,3 +1,17 @@
+## v7.4.4.8 (TV interface fork)
+### Fixed
+- Info on "show all" and other tiles without a description no longer shows
+  the description of the item whose info was opened before.
+
+## v7.4.4.7 (TV interface fork)
+### New
+- The grid of the TV interface ("show all", folders, search results) has a
+  scrollbar. Right from the last column moves to it, Up and Down there
+  move the grid by rows.
+- A grid page shows 100 tiles instead of 30, 99 videos on the first page
+  and 98 on the following ones besides the previous / next page tiles, so
+  that every row is full.
+
 ## v7.4.4.5 (TV interface fork)
 ### New
 - The search dialog of the skin, e.g. opened with the search key of the
