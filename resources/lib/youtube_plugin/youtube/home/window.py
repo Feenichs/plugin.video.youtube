@@ -52,10 +52,14 @@ ROW_LISTS = tuple(range(301, 309))
 ROW_LABELS = tuple(range(401, 409))
 ROW_GROUPS = tuple(range(501, 509))
 GRID_PANEL = 600
+# invisible button beside the slider of the grid
+GRID_SCROLL_HANDLE = 602
+GRID_COLUMNS = 4
 
 CACHE_SECONDS = 300
-# items per grid page, independent of the page size of the listings
-GRID_PAGE_SIZE = 30
+# tiles per grid page, independent of the page size of the listings,
+# a multiple of the columns of the grid
+GRID_PAGE_TILES = 100
 HERO_IMAGE = 'https://i.ytimg.com/vi/{0}/{1}.jpg'
 TAB_SWITCH_DELAY = 0.35
 # delay before refreshing after playback has ended, so that the history and
@@ -85,6 +89,19 @@ TAB_LABELS = {
     data.TAB_ACCOUNT: ('home_window.tab.account',
                        'home_window.tab.account.description'),
 }
+
+
+def _grid_page_range(page):
+    """
+    Range of the items shown on a grid page. A page has GRID_PAGE_TILES
+    tiles including the tiles to the previous and the next page, so that
+    all rows are full except on the last page.
+    """
+    if page == 1:
+        return 0, GRID_PAGE_TILES - 1
+    size = GRID_PAGE_TILES - 2
+    start = GRID_PAGE_TILES - 1 + (page - 2) * size
+    return start, start + size
 
 
 class HomeWindow(xbmcgui.WindowXML):
@@ -177,8 +194,15 @@ class HomeWindow(xbmcgui.WindowXML):
 
         if action_id == ACTION_SHOW_INFO:
             item = self._focused_item(focus_id)
-            if item:
-                xbmcgui.Dialog().textviewer(item['title'], item['plot'] or '')
+            # tiles without a description ("show all", folders) have no info,
+            # Kodi's text viewer would show the text of the previous call
+            if item and item['plot']:
+                xbmcgui.Dialog().textviewer(item['title'], item['plot'])
+            return
+
+        if focus_id == GRID_SCROLL_HANDLE and action_id in (ACTION_MOVE_UP,
+                                                            ACTION_MOVE_DOWN):
+            self._scroll(down=action_id == ACTION_MOVE_DOWN)
             return
 
         if focus_id == NAV_LIST and action_id in (ACTION_MOVE_LEFT,
@@ -205,6 +229,16 @@ class HomeWindow(xbmcgui.WindowXML):
             self._activate(control_id, item)
 
     # Navigation
+
+    def _scroll(self, down):
+        """Move the grid beside the slider by one row"""
+        control = self.getControl(GRID_PANEL)
+        position = control.getSelectedPosition()
+        if not down and position < GRID_COLUMNS:
+            self.setFocusId(NAV_LIST)
+            return
+        target = position + GRID_COLUMNS if down else position - GRID_COLUMNS
+        control.selectItem(min(target, control.size() - 1))
 
     def _on_back(self, focus_id):
         if self._stack:
@@ -522,9 +556,9 @@ class HomeWindow(xbmcgui.WindowXML):
 
     def _open_grid(self, title, uri=None, page=1, source=None):
         """
-        Open a grid page. The pages of a grid show GRID_PAGE_SIZE items each,
-        independent of the pages of the listing, which are loaded from the
-        source of the grid as required.
+        Open a grid page. The pages of a grid show GRID_PAGE_TILES tiles each
+        (see _grid_page_range), independent of the pages of the listing, which
+        are loaded from the source of the grid as required.
         """
         focus_id = self.getFocusId()
         if self._stack:
@@ -609,8 +643,7 @@ class HomeWindow(xbmcgui.WindowXML):
         localize = self._context.localize
 
         def _run():
-            start = (page - 1) * GRID_PAGE_SIZE
-            end = start + GRID_PAGE_SIZE
+            start, end = _grid_page_range(page)
             # load one more item than shown to know if there is a next page
             if not self._load_source(source, end + 1, generation, refresh):
                 return
