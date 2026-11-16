@@ -604,7 +604,7 @@ class XbmcPlugin(AbstractPlugin):
                     as_bool=True,
                 )
                 if audio_only is None:
-                    audio_only = context.settings().audio_only()
+                    audio_only = context.get_settings().audio_only()
                 action = context.create_uri(
                     path,
                     params,
