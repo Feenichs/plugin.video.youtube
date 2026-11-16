@@ -444,7 +444,13 @@ class HomeWindow(xbmcgui.WindowXML):
             self._generation += 1
             generation = self._generation
         self._row_data = {}
-        self._row_offset = 0
+        # the rows above a row whose focus is restored stay hidden, they would
+        # be shown one by one and hidden again otherwise
+        restore = self._restore
+        if restore and restore[0] in ROW_LISTS:
+            self._row_offset = ROW_LISTS.index(restore[0])
+        else:
+            self._row_offset = 0
 
         rows = rows[:len(ROW_LISTS)]
         for index, group_id in enumerate(ROW_GROUPS):
@@ -483,6 +489,7 @@ class HomeWindow(xbmcgui.WindowXML):
                     if self._restore and self._restore[0] in ROW_LISTS:
                         # the remembered row is empty now
                         self._restore = None
+                        self._set_row_offset(0)
                     self._sync_row_focus()
 
         self._start(_run)
@@ -586,6 +593,8 @@ class HomeWindow(xbmcgui.WindowXML):
             'position': None,
             'page': page,
         })
+        # a position remembered for another grid page must not be restored
+        self._restore = None
         self._show_grid()
 
     @staticmethod
