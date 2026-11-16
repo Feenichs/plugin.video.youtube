@@ -1,3 +1,12 @@
+## v7.4.4.9 (TV interface fork)
+### Fixed
+- Returning to a tile in a lower row, with Back or after playback, no longer
+  shows the rows above it one by one before the view jumps to the row.
+- A newly opened grid page starts at its first tile, also if a position was
+  remembered for a playback that did not start.
+- Playing with the audio only setting undefined no longer fails with an
+  error.
+
 ## v7.4.4.8 (TV interface fork)
 ### Fixed
 - Info on "show all" and other tiles without a description no longer shows
