@@ -106,11 +106,20 @@ class XbmcPlugin(AbstractPlugin):
         uri = context.get_uri()
         path = context.get_path().rstrip('/')
 
-        route = ui.pop_property(REROUTE_PATH)
+        if home_window:
+            # A pending route and the busy flag belong to a request of the
+            # media window or to a playback request that runs at the same
+            # time. Taking them here would redirect this listing to the
+            # classic list view and open it on top of the TV interface.
+            route = None
+            was_busy = None
+        else:
+            route = ui.pop_property(REROUTE_PATH)
+            was_busy = ui.pop_property(BUSY_FLAG)
         _post_run_action = None
         post_run_actions = []
         succeeded = False
-        for was_busy in (ui.pop_property(BUSY_FLAG),):
+        for was_busy in (was_busy,):
             if was_busy:
                 if ui.busy_dialog_active():
                     ui.set_property(BUSY_FLAG)
@@ -227,7 +236,7 @@ class XbmcPlugin(AbstractPlugin):
                 result, options = provider.navigate(context)
                 logging.debug('Plugin runner options: {options!r}',
                               options=options)
-                if ui.get_property(REROUTE_PATH):
+                if not home_window and ui.get_property(REROUTE_PATH):
                     xbmcplugin.endOfDirectory(
                         handle,
                         succeeded=False,
@@ -354,10 +363,11 @@ class XbmcPlugin(AbstractPlugin):
                     handle, succeeded=True, listitem=item
                 )
         elif not items or force_return:
-            ui.clear_property(BUSY_FLAG)
-            ui.clear_property(TRAKT_PAUSE_FLAG, raw=True)
-            for param in FORCE_PLAY_PARAMS:
-                ui.clear_property(param)
+            if not home_window:
+                ui.clear_property(BUSY_FLAG)
+                ui.clear_property(TRAKT_PAUSE_FLAG, raw=True)
+                for param in FORCE_PLAY_PARAMS:
+                    ui.clear_property(param)
 
             fallback = options.get(provider.FALLBACK, not force_return)
             if home_window:
