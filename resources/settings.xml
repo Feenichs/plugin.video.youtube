@@ -169,12 +169,11 @@
                         - Opus audio
                         - no HFR at max quality
                         - no fractional framerate hinting
-                        - no framerate hinting
                         - spatial audio
                         - alternate sorting of unselected codecs
                         - ttml subtitles
                     -->
-                    <default>avc1,vp9,av01,hdr,hfr,3d,vr,prefer_dub,prefer_auto_dub,vorbis,mp4a,ssa,ac-3,ec-3,dts,vtt,filter</default>
+                    <default>avc1,vp9,av01,hdr,hfr,no_fr_hint,3d,vr,prefer_dub,prefer_auto_dub,vorbis,mp4a,ssa,ac-3,ec-3,dts,vtt,filter</default>
                     <constraints>
                         <options>
                             <option label="30727">avc1</option>
