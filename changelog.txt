@@ -1,3 +1,10 @@
+## v7.4.4.10 (TV interface fork)
+### Fixed
+- Stopping a video no longer ends up in the classic list view. This happened
+  if a video was started while the TV interface was still loading its rows,
+  e.g. right after the previous video was stopped: the listing that was
+  loading was opened in the classic view once playback had ended.
+
 ## v7.4.4.9 (TV interface fork)
 ### Fixed
 - Returning to a tile in a lower row, with Back or after playback, no longer
