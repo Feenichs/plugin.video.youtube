@@ -1,3 +1,14 @@
+## v7.4.4.11 (TV interface fork)
+### Fixed
+- 24 fps videos no longer switch the display refresh rate twice, with two
+  black screens, a few seconds after the start. YouTube only reports whole
+  frame rates, so the add-on had to guess 23.976 or 24 fps and Kodi
+  switched again once it had measured the real rate. By default the add-on
+  no longer hints a frame rate ("Disable all framerate hinting" in the stream
+  features), and Kodi switches once to the measured rate. Existing
+  installations keep their saved stream features; the option can be
+  enabled there.
+
 ## v7.4.4.10 (TV interface fork)
 ### Fixed
 - Stopping a video no longer ends up in the classic list view. This happened
